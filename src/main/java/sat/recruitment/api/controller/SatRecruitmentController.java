@@ -1,7 +1,6 @@
 package sat.recruitment.api.controller;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -22,13 +21,11 @@ public class SatRecruitmentController {
 
 	private List<User> users = new ArrayList<User>();
 
+	//TODO: ver url
 	@PostMapping(value = "/create-user", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public void createUser(@RequestBody User messageBody) {
-		String errors = "";
-
-		validateErrors(messageBody.getName(), messageBody.getEmail(), messageBody.getAddress(), messageBody.getPhone(),
-				errors);
+		String errors = validateErrors(messageBody);
 
 		if (errors != null && errors != "") {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errors);
@@ -71,6 +68,7 @@ public class SatRecruitmentController {
 			}
 		}
 
+		// repository
 		InputStream fstream;
 		try {
 			fstream = getClass().getResourceAsStream("/users.txt");
@@ -114,19 +112,25 @@ public class SatRecruitmentController {
 		}
 	}
 
-	public void validateErrors(String name, String email, String address, String phone, String errors) {
-		if (name == null)
+	private String validateErrors(User user) {
+		String errors = "";
+		if (user.getName() == null)
 			// Validate if Name is null
 			errors = "The name is required";
-		if (email == null)
+		if (user.getEmail() == null)
 			// Validate if Email is null
 			errors = errors + " The email is required";
-		if (address == null)
+		if (user.getAddress() == null)
 			// Validate if Address is null
 			errors = errors + " The address is required";
-		if (phone == null)
+		if (user.getPhone() == null)
 			// Validate if Phone is null
 			errors = errors + " The phone is required";
+		if (user.getUserType() == null)
+			errors = errors + " The userType is required";
+		if (user.getMoney() == null)
+			errors = errors + " The Money is required";
+		return errors;
 	}
 
 }
