@@ -157,9 +157,9 @@ class MessagesActionsControllerTest {
     }
 
     @Test
-    public void shouldReturnOKWhenUserWasCreated(){
+    public void shouldReturn201CreatedWhenUserWasCreated(){
         assertThat(controller.createUser(user)
-                             .getStatusCode()).isEqualTo(HttpStatus.OK);
+                             .getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
     @Test

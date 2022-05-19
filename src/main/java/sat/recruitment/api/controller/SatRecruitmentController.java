@@ -23,7 +23,6 @@ public class SatRecruitmentController {
 
 	//TODO: ver url
 	@PostMapping(value = "user/create", consumes = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseStatus(value = HttpStatus.CREATED)
 	public ResponseEntity createUser(@RequestBody User newUser) {
 		validateErrors(newUser);
 		validateUserDuplicated(newUser);
@@ -32,7 +31,7 @@ public class SatRecruitmentController {
 		newUser = addGiftToMoneyUserDecorator(newUser);
 		userRepository.create(newUser);
 
-		return ResponseEntity.ok().build();
+		return ResponseEntity.created(null).build();
 	}
 
 	private void validateUserDuplicated(User newUser) {
