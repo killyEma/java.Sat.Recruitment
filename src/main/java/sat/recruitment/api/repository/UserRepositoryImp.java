@@ -2,6 +2,7 @@ package sat.recruitment.api.repository;
 
 import org.springframework.stereotype.Service;
 import sat.recruitment.api.domain.User;
+import sat.recruitment.api.domain.UserType;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -28,7 +29,7 @@ public class UserRepositoryImp implements UserRepository {
                     userP.setEmail(line[1]);
                     userP.setPhone(line[2]);
                     userP.setAddress(line[3]);
-                    userP.setUserType(line[4]);
+                    userP.setUserType(UserType.valueOf(line[4]));
                     user.setMoney(Double.valueOf(line[5]));
                     users.add(userP);
 

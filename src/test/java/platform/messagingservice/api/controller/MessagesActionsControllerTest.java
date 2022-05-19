@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import sat.recruitment.api.controller.SatRecruitmentController;
 import sat.recruitment.api.domain.User;
+import sat.recruitment.api.domain.UserType;
 import sat.recruitment.api.repository.UserRepository;
 import sat.recruitment.api.repository.UserRepositoryImp;
 
@@ -27,7 +28,7 @@ class MessagesActionsControllerTest {
         user.setName("Ema");
         user.setAddress("calle 1234");
         user.setMoney(100.0);
-        user.setUserType("suertope");
+        user.setUserType(UserType.Normal);
         user.setPhone("6546");
         user.setEmail("ema@gmail.com");
         userRepository = new UserRepositoryImp();
@@ -163,7 +164,7 @@ class MessagesActionsControllerTest {
 
     @Test
     public void shouldAdd12PercentageWhenUserTypeIsNormalAndMoneyIsGreaterThan100(){
-        user.setUserType("Normal");
+        user.setUserType(UserType.Normal);
         user.setMoney(200.0);
 
         Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
@@ -173,7 +174,7 @@ class MessagesActionsControllerTest {
 
     @Test
     public void shouldAdd80PercentageWhenUserTypeIsNormalAndMoneyIsBetween10And100(){
-        user.setUserType("Normal");
+        user.setUserType(UserType.Normal);
         user.setMoney(50.0);
 
         Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
@@ -183,7 +184,7 @@ class MessagesActionsControllerTest {
 
     @Test
     public void whenMoneyIs100AndUserTypeIsNormalTheGiftPercentageIs0(){
-        user.setUserType("Normal");
+        user.setUserType(UserType.Normal);
         user.setMoney(100.0);
 
         Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
@@ -193,7 +194,7 @@ class MessagesActionsControllerTest {
 
     @Test
     public void shouldAdd20PercentageWhenUserTypeIsSuperUserAndMoneyIsGreaterThan100(){
-        user.setUserType("SuperUser");
+        user.setUserType(UserType.SuperUser);
         user.setMoney(200.0);
 
         Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
@@ -203,7 +204,7 @@ class MessagesActionsControllerTest {
 
     @Test
     public void shouldAdd0PercentageWhenUserTypeIsSuperUserAndMoneyIsLessThan100(){
-        user.setUserType("SuperUser");
+        user.setUserType(UserType.SuperUser);
         user.setMoney(100.0);
 
         Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
@@ -212,7 +213,7 @@ class MessagesActionsControllerTest {
     }
     @Test
     public void shouldAdd200PercentageWhenUserTypeIsPremiumAndMoneyIsGreaterThan100(){
-        user.setUserType("Premium");
+        user.setUserType(UserType.Premium);
         user.setMoney(101.0);
 
         Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
@@ -222,7 +223,7 @@ class MessagesActionsControllerTest {
 
     @Test
     public void shouldAdd0PercentageWhenUserTypeIsPremiumAndMoneyIsLessThan100(){
-        user.setUserType("Premium");
+        user.setUserType(UserType.Premium);
         user.setMoney(99.0);
 
         Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();

@@ -42,34 +42,15 @@ public class SatRecruitmentController {
 	}
 
 	public User addGiftToMoneyUserDecorator(User newUser) {
-		if (newUser.getUserType().equals("Normal")) {
-			if (Double.valueOf(newUser.getMoney()) > 100) {
-				Double percentage = Double.valueOf("0.12");
-				// If new user is normal and has more than USD100
-				var gif = Double.valueOf(newUser.getMoney()) * percentage;
-				newUser.setMoney(newUser.getMoney() + gif);
-			}
-			if (Double.valueOf(newUser.getMoney()) < 100) {
-				if (Double.valueOf(newUser.getMoney()) > 10) {
-					var percentage = Double.valueOf("0.8");
-					var gif = Double.valueOf(newUser.getMoney()) * percentage;
-					newUser.setMoney(newUser.getMoney() + gif);
-				}
-			}
+		Double money = newUser.getMoney();
+		double gift = 0.0d;
+		switch (newUser.getUserType()){
+			case Premium: if (money > 100) gift = money * 2; break;
+			case SuperUser: if (money > 100) gift = money * 0.2; break;
+			case Normal: if (money > 100) gift = money * 0.12;
+				 		 if (money < 100 && money > 10) gift = money * 0.8; break;
 		}
-		if (newUser.getUserType().equals("SuperUser")) {
-			if (Double.valueOf(newUser.getMoney()) > 100) {
-				Double percentage = Double.valueOf("0.20");
-				Double gif = Double.valueOf(newUser.getMoney()) * percentage;
-				newUser.setMoney(newUser.getMoney() + gif);
-			}
-		}
-		if (newUser.getUserType().equals("Premium")) {
-			if (Double.valueOf(newUser.getMoney()) > 100) {
-				Double gif = Double.valueOf(newUser.getMoney()) * 2;
-				newUser.setMoney(newUser.getMoney() + gif);
-			}
-		}
+		newUser.setMoney(money + gift);
 		return newUser;
 	}
 

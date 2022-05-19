@@ -5,14 +5,14 @@ public class User {
 	public String email;
 	public String address;
 	public String phone;
-	public String userType;
+	public UserType userType;
 	public Double money;
 	
 	public User() {
 		
 	}
 
-	public User(String name, String email, String address, String phone, String userType, Double money) {
+	public User(String name, String email, String address, String phone, UserType userType, Double money) {
 		super();
 		this.name = name;
 		this.email = email;
@@ -54,11 +54,11 @@ public class User {
 		this.phone = phone;
 	}
 
-	public String getUserType() {
+	public UserType getUserType() {
 		return userType;
 	}
 
-	public void setUserType(String userType) {
+	public void setUserType(UserType userType) {
 		this.userType = userType;
 	}
 
