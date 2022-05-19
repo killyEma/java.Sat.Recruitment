@@ -5,9 +5,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import sat.recruitment.api.controller.SatRecruitmentController;
-import sat.recruitment.api.controller.User;
+import sat.recruitment.api.domain.User;
+import sat.recruitment.api.repository.UserRepository;
+import sat.recruitment.api.repository.UserRepositoryImp;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -16,6 +19,7 @@ class MessagesActionsControllerTest {
     private SatRecruitmentController controller;
     private User user;
     private Exception exception;
+    private UserRepository userRepository;
 
     @BeforeEach
     public void setUp() {
@@ -26,13 +30,10 @@ class MessagesActionsControllerTest {
         user.setUserType("suertope");
         user.setPhone("6546");
         user.setEmail("ema@gmail.com");
-        controller = new SatRecruitmentController();
+        userRepository = new UserRepositoryImp();
+        controller = new SatRecruitmentController(userRepository);
 
         exception = new Exception();
-    }
-    @Test
-    public void testCreateUSer() {
-
     }
 
     @Test
@@ -110,5 +111,53 @@ class MessagesActionsControllerTest {
         String actualMessage = exception.getMessage();
 
         assertThat(actualMessage).isEqualTo(expectedMessage);
+    }
+
+    @Test
+    public void shouldThrowBadRequestUserDuplicatedWhenUserHasSameEmailThanAnother(){
+        user.setEmail("Juan@marmol.com");
+
+        exception = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            controller.createUser(user);
+        });
+
+        String expectedMessage = "400 BAD_REQUEST \"User is duplicated\"";
+        String actualMessage = exception.getMessage();
+
+        assertThat(actualMessage).isEqualTo(expectedMessage);
+    }
+
+    @Test
+    public void shouldThrowBadRequestUserDuplicatedWhenUserHasSamePhoneThanAnother(){
+        user.setPhone("+5491154762312");
+
+        exception = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            controller.createUser(user);
+        });
+
+        String expectedMessage = "400 BAD_REQUEST \"User is duplicated\"";
+        String actualMessage = exception.getMessage();
+
+        assertThat(actualMessage).isEqualTo(expectedMessage);
+    }
+    @Test
+    public void shouldThrowBadRequestUserDuplicatedWhenUserNameAndAddressAlreadyExist(){
+        user.setName("Juan");
+        user.setAddress("Peru 2464");
+
+        exception = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            controller.createUser(user);
+        });
+
+        String expectedMessage = "400 BAD_REQUEST \"User is duplicated\"";
+        String actualMessage = exception.getMessage();
+
+        assertThat(actualMessage).isEqualTo(expectedMessage);
+    }
+
+    @Test
+    public void shouldReturnOKWhenUserWasCreated(){
+        assertThat(controller.createUser(user)
+                             .getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 }
