@@ -41,7 +41,7 @@ public class SatRecruitmentController {
 		}
 	}
 
-	private User addGiftToMoneyUserDecorator(User newUser) {
+	public User addGiftToMoneyUserDecorator(User newUser) {
 		if (newUser.getUserType().equals("Normal")) {
 			if (Double.valueOf(newUser.getMoney()) > 100) {
 				Double percentage = Double.valueOf("0.12");

@@ -160,4 +160,73 @@ class MessagesActionsControllerTest {
         assertThat(controller.createUser(user)
                              .getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+
+    @Test
+    public void shouldAdd12PercentageWhenUserTypeIsNormalAndMoneyIsGreaterThan100(){
+        user.setUserType("Normal");
+        user.setMoney(200.0);
+
+        Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
+
+        assertThat(MoneyWithGift).isEqualTo(224.0);
+    }
+
+    @Test
+    public void shouldAdd80PercentageWhenUserTypeIsNormalAndMoneyIsBetween10And100(){
+        user.setUserType("Normal");
+        user.setMoney(50.0);
+
+        Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
+
+        assertThat(MoneyWithGift).isEqualTo(90.0);
+    }
+
+    @Test
+    public void whenMoneyIs100AndUserTypeIsNormalTheGiftPercentageIs0(){
+        user.setUserType("Normal");
+        user.setMoney(100.0);
+
+        Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
+
+        assertThat(MoneyWithGift).isEqualTo(100.0);
+    }
+
+    @Test
+    public void shouldAdd20PercentageWhenUserTypeIsSuperUserAndMoneyIsGreaterThan100(){
+        user.setUserType("SuperUser");
+        user.setMoney(200.0);
+
+        Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
+
+        assertThat(MoneyWithGift).isEqualTo(240.0);
+    }
+
+    @Test
+    public void shouldAdd0PercentageWhenUserTypeIsSuperUserAndMoneyIsLessThan100(){
+        user.setUserType("SuperUser");
+        user.setMoney(100.0);
+
+        Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
+
+        assertThat(MoneyWithGift).isEqualTo(100.0);
+    }
+    @Test
+    public void shouldAdd200PercentageWhenUserTypeIsPremiumAndMoneyIsGreaterThan100(){
+        user.setUserType("Premium");
+        user.setMoney(101.0);
+
+        Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
+
+        assertThat(MoneyWithGift).isEqualTo(303.0);
+    }
+
+    @Test
+    public void shouldAdd0PercentageWhenUserTypeIsPremiumAndMoneyIsLessThan100(){
+        user.setUserType("Premium");
+        user.setMoney(99.0);
+
+        Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
+
+        assertThat(MoneyWithGift).isEqualTo(99.0);
+    }
 }
