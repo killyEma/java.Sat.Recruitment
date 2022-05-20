@@ -1,4 +1,4 @@
-package platform.messagingservice.api.service;
+package sat.recruitment.api.service;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +11,6 @@ import sat.recruitment.api.delegate.UserDecorator;
 import sat.recruitment.api.domain.User;
 import sat.recruitment.api.domain.UserType;
 import sat.recruitment.api.repository.UserRepository;
-import sat.recruitment.api.service.UserServiceImpl;
 
 import java.util.Optional;
 
@@ -57,8 +56,6 @@ public class UserServiceImplTest {
 
         verify(userRepository).create(user);
     }
-
-
 
     @Test
     public void shouldThrowBadRequestUserDuplicatedWhenUserAlreadyExist(){

@@ -1,6 +1,7 @@
 package sat.recruitment.api.repository;
 
 import org.springframework.stereotype.Service;
+import sat.recruitment.api.delegate.Rules;
 import sat.recruitment.api.domain.User;
 import sat.recruitment.api.domain.UserType;
 
@@ -13,6 +14,11 @@ import java.util.Optional;
 
 @Service
 public class UserRepositoryImp implements UserRepository {
+    private Rules rules;
+
+    public UserRepositoryImp(Rules rules){
+        this.rules =rules;
+    }
 
     @Override
     public Optional<User> get(User user) {
@@ -39,21 +45,7 @@ public class UserRepositoryImp implements UserRepository {
             e.printStackTrace();
         }
 
-        return users.stream().filter(user1 -> {
-            if (usersHaveSameEmailsOrPhoneNumbers(user, user1)) {
-                return  true;
-            } else return usersHaveSameNameAndAddress(user, user1);
-        }).findAny();
-    }
-
-    private boolean usersHaveSameNameAndAddress(User user, User user1) {
-        return user1.getName().equals(user.getName()) &&
-               user1.getAddress().equals(user.getAddress());
-    }
-
-    private boolean usersHaveSameEmailsOrPhoneNumbers(User user, User user1) {
-        return user1.getEmail().equals(user.getEmail()) ||
-                user1.getPhone().equals(user.getPhone());
+        return rules.runRulesUserRepeated(user, users);
     }
 
     @Override
