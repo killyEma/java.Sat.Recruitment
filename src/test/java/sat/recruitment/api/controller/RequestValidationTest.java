@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = SatRecruitmentApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class RequestValidation {
+public class RequestValidationTest {
 
     @Autowired
     private MockMvc mvc;
@@ -157,7 +157,7 @@ public class RequestValidation {
 
         private SatRecruitmentController controller;
         private User user;
-        private Exception exception;
+
         @Mock
         private UserRepository userRepository;
         @Mock
@@ -174,7 +174,7 @@ public class RequestValidation {
             user.setEmail("ema@gmail.com");
             controller = new SatRecruitmentController(userRepository, userService);
 
-            exception = new Exception();
+
         }
 
         @Test
