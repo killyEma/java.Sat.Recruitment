@@ -9,12 +9,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserRepositoryImp implements UserRepository {
 
     @Override
-    public User get(User user) {
+    public Optional<User> get(User user) {
 
         List<User> users = new ArrayList<>();
         try (InputStream stream = getClass().getResourceAsStream("/users.txt")) {
@@ -30,26 +31,29 @@ public class UserRepositoryImp implements UserRepository {
                     userP.setPhone(line[2]);
                     userP.setAddress(line[3]);
                     userP.setUserType(UserType.valueOf(line[4]));
-                    user.setMoney(Double.valueOf(line[5]));
+                    userP.setMoney(Double.valueOf(line[5]));
                     users.add(userP);
-
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        for (User userp : users) {
-            if (userp.getEmail().equals(user.getEmail()) ||
-                    userp.getPhone().equals(user.getPhone())) {
-                return userp;
-            } else if (userp.getName().equals(user.getName()) &&
-                    userp.getAddress().equals(user.getAddress())) {
-                return userp;
-            }
-        }
+        return users.stream().filter(user1 -> {
+            if (usersHaveSameEmailsOrPhoneNumbers(user, user1)) {
+                return  true;
+            } else return usersHaveSameNameAndAddress(user, user1);
+        }).findAny();
+    }
 
-        return null;
+    private boolean usersHaveSameNameAndAddress(User user, User user1) {
+        return user1.getName().equals(user.getName()) &&
+               user1.getAddress().equals(user.getAddress());
+    }
+
+    private boolean usersHaveSameEmailsOrPhoneNumbers(User user, User user1) {
+        return user1.getEmail().equals(user.getEmail()) ||
+                user1.getPhone().equals(user.getPhone());
     }
 
     @Override

@@ -8,19 +8,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import sat.recruitment.api.controller.SatRecruitmentController;
+import sat.recruitment.api.delegate.UserDecorator;
 import sat.recruitment.api.domain.User;
 import sat.recruitment.api.domain.UserType;
 import sat.recruitment.api.repository.UserRepository;
 import sat.recruitment.api.repository.UserRepositoryImp;
+import sat.recruitment.api.service.UserService;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class MessagesActionsControllerTest {
-    @Autowired
+    //@Autowired
     private SatRecruitmentController controller;
     private User user;
     private Exception exception;
     private UserRepository userRepository;
+    private UserService userService;
+    private UserDecorator userDecorator;
 
     @BeforeEach
     public void setUp() {
@@ -32,7 +36,9 @@ class MessagesActionsControllerTest {
         user.setPhone("6546");
         user.setEmail("ema@gmail.com");
         userRepository = new UserRepositoryImp();
-        controller = new SatRecruitmentController(userRepository);
+        userDecorator = new UserDecorator();
+        userService = new UserService(userRepository, userDecorator);
+        controller = new SatRecruitmentController(userRepository, userService);
 
         exception = new Exception();
     }
@@ -114,120 +120,11 @@ class MessagesActionsControllerTest {
         assertThat(actualMessage).isEqualTo(expectedMessage);
     }
 
-    @Test
-    public void shouldThrowBadRequestUserDuplicatedWhenUserHasSameEmailThanAnother(){
-        user.setEmail("Juan@marmol.com");
-
-        exception = Assertions.assertThrows(ResponseStatusException.class, () -> {
-            controller.createUser(user);
-        });
-
-        String expectedMessage = "400 BAD_REQUEST \"User is duplicated\"";
-        String actualMessage = exception.getMessage();
-
-        assertThat(actualMessage).isEqualTo(expectedMessage);
-    }
-
-    @Test
-    public void shouldThrowBadRequestUserDuplicatedWhenUserHasSamePhoneThanAnother(){
-        user.setPhone("+5491154762312");
-
-        exception = Assertions.assertThrows(ResponseStatusException.class, () -> {
-            controller.createUser(user);
-        });
-
-        String expectedMessage = "400 BAD_REQUEST \"User is duplicated\"";
-        String actualMessage = exception.getMessage();
-
-        assertThat(actualMessage).isEqualTo(expectedMessage);
-    }
-    @Test
-    public void shouldThrowBadRequestUserDuplicatedWhenUserNameAndAddressAlreadyExist(){
-        user.setName("Juan");
-        user.setAddress("Peru 2464");
-
-        exception = Assertions.assertThrows(ResponseStatusException.class, () -> {
-            controller.createUser(user);
-        });
-
-        String expectedMessage = "400 BAD_REQUEST \"User is duplicated\"";
-        String actualMessage = exception.getMessage();
-
-        assertThat(actualMessage).isEqualTo(expectedMessage);
-    }
 
     @Test
     public void shouldReturn201CreatedWhenUserWasCreated(){
         assertThat(controller.createUser(user)
-                             .getStatusCode()).isEqualTo(HttpStatus.CREATED);
+                             .getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
-    @Test
-    public void shouldAdd12PercentageWhenUserTypeIsNormalAndMoneyIsGreaterThan100(){
-        user.setUserType(UserType.Normal);
-        user.setMoney(200.0);
-
-        Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
-
-        assertThat(MoneyWithGift).isEqualTo(224.0);
-    }
-
-    @Test
-    public void shouldAdd80PercentageWhenUserTypeIsNormalAndMoneyIsBetween10And100(){
-        user.setUserType(UserType.Normal);
-        user.setMoney(50.0);
-
-        Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
-
-        assertThat(MoneyWithGift).isEqualTo(90.0);
-    }
-
-    @Test
-    public void whenMoneyIs100AndUserTypeIsNormalTheGiftPercentageIs0(){
-        user.setUserType(UserType.Normal);
-        user.setMoney(100.0);
-
-        Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
-
-        assertThat(MoneyWithGift).isEqualTo(100.0);
-    }
-
-    @Test
-    public void shouldAdd20PercentageWhenUserTypeIsSuperUserAndMoneyIsGreaterThan100(){
-        user.setUserType(UserType.SuperUser);
-        user.setMoney(200.0);
-
-        Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
-
-        assertThat(MoneyWithGift).isEqualTo(240.0);
-    }
-
-    @Test
-    public void shouldAdd0PercentageWhenUserTypeIsSuperUserAndMoneyIsLessThan100(){
-        user.setUserType(UserType.SuperUser);
-        user.setMoney(100.0);
-
-        Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
-
-        assertThat(MoneyWithGift).isEqualTo(100.0);
-    }
-    @Test
-    public void shouldAdd200PercentageWhenUserTypeIsPremiumAndMoneyIsGreaterThan100(){
-        user.setUserType(UserType.Premium);
-        user.setMoney(101.0);
-
-        Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
-
-        assertThat(MoneyWithGift).isEqualTo(303.0);
-    }
-
-    @Test
-    public void shouldAdd0PercentageWhenUserTypeIsPremiumAndMoneyIsLessThan100(){
-        user.setUserType(UserType.Premium);
-        user.setMoney(99.0);
-
-        Double MoneyWithGift = controller.addGiftToMoneyUserDecorator(user).getMoney();
-
-        assertThat(MoneyWithGift).isEqualTo(99.0);
-    }
 }
