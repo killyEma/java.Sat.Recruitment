@@ -1,11 +1,19 @@
 package sat.recruitment.api.domain;
 
+import javax.validation.constraints.NotNull;
+
 public class User {
+	@NotNull(message = "400 BAD_REQUEST \"The name is required\"")
 	public String name;
+	@NotNull(message = "400 BAD_REQUEST \" The email is required\"")
 	public String email;
+	@NotNull(message = "400 BAD_REQUEST \" The address is required\"")
 	public String address;
+	@NotNull(message = "400 BAD_REQUEST \" The phone is required\"")
 	public String phone;
+	@NotNull(message = "400 BAD_REQUEST \" The userType is required\"")
 	public UserType userType;
+	@NotNull(message = "400 BAD_REQUEST \" The Money is required\"")
 	public Double money;
 	
 	public User() {

@@ -12,8 +12,10 @@ import sat.recruitment.api.domain.User;
 import sat.recruitment.api.repository.UserRepository;
 import sat.recruitment.api.service.UserService;
 
+import javax.validation.Valid;
+
 @RestController
-@RequestMapping(value = "/api/v1/recruitment")
+@RequestMapping(value = "/recruitment/api/v1")
 public class SatRecruitmentController {
 	private UserRepository userRepository;
 	private UserService userService;
@@ -24,32 +26,10 @@ public class SatRecruitmentController {
 	}
 
 	@PostMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity createUser(@RequestBody User newUser) {
-		validateErrors(newUser);
-
+	public ResponseEntity createUser(@Valid @RequestBody User newUser) {
 		userService.saveUser(newUser);
 
 		return ResponseEntity.noContent().build();
-	}
-
-	private void validateErrors(User user) {
-		String errors = "";
-		if (user.getName() == null)
-			errors = "The name is required";
-		if (user.getEmail() == null)
-			errors = errors + " The email is required";
-		if (user.getAddress() == null)
-			errors = errors + " The address is required";
-		if (user.getPhone() == null)
-			errors = errors + " The phone is required";
-		if (user.getUserType() == null)
-			errors = errors + " The userType is required";
-		if (user.getMoney() == null)
-			errors = errors + " The Money is required";
-
-		if (!errors.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errors);
-		}
 	}
 
 }
