@@ -34,7 +34,7 @@ public class UserServiceImplTest {
     public void setUp() {
         user = new User();
         user.setName("Ema");
-        user.setAddress("calle 1234");
+        user.setAddress("Street 1234");
         user.setMoney(100.0);
         user.setUserType(UserType.Normal);
         user.setPhone("6546");
