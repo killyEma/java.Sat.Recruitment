@@ -5,6 +5,7 @@ import sat.recruitment.api.domain.User;
 
 @Service
 public class UserDecorator {
+
     public User addGiftToMoneyUser(User newUser) {
         Double money = newUser.getMoney();
         double gift = 0.0d;

@@ -23,7 +23,6 @@ public class UserDecoratorTest {
         user.setPhone("6546");
         user.setEmail("ema@gmail.com");
         userDecorator = new UserDecorator();
-
     }
 
     @Test
